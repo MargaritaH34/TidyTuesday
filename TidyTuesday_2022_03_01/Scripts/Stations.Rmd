@@ -1,0 +1,53 @@
+---
+title: "Alternative Fuel Stations"
+author: "Margarita Alfaro"
+date: "3/10/2022"
+output:
+   html_document:
+     toc: TRUE
+     toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path = '../output/', warning = FALSE, message = FALSE )
+```
+
+### Load Libraries ###
+```{r}
+library(here)
+library(tidyverse)
+library(palmerpenguins)
+library(ggplot2)
+library(dplyr)
+```
+
+### Load Data ###
+```{r}
+stations <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-01/stations.csv')
+```
+
+### Plotting ###
+```{r}
+data <- stations %>% 
+  select( X, Y, STREET_ADDRESS, STATE, ACCESS_CODE) %>% # selects variables 
+  mutate(X, Y, STREET_ADDRESS, STATE, ACCESS_CODE) %>% # creates new columns 
+  filter(ACCESS_CODE == "public" | ACCESS_CODE == "private") %>% 
+  filter(STATE == "LA") %>% # filters the state of LA 
+  drop_na()
+```
+### Creating our ggplot ###
+```{r}
+data %>%
+ggplot(aes(x= ACCESS_CODE, y= STATE))+
+  geom_count() +
+  labs(x = "Owner Type", y = "State", #labels our x and y-axis
+       title = "Fuel Stations in LA", #creates our title
+       subtitle= "Quantity of Fuel Stations that have Public and Private access", #creates and label the subtitle
+       caption = "Source: 2022-03-01 TidyTuesday  Data Provided by the US deparment of Energy")+ #adds a caption from where our data was obtained
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+```{r}
+ggsave(here("TidyTuesday_2022_03_01", "Output", "Fuel_Stations.png"))
+```
+
