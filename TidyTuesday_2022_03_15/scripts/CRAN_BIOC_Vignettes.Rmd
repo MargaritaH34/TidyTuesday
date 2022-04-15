@@ -1,0 +1,75 @@
+---
+title: "CRAN/BIOC Vignettes"
+author: "Margarita Alfaro"
+date: "3/15/2022"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path = '../output', warning = FALSE, message = FALSE)
+```
+
+### Loas Libraries ###
+```{r}
+library(tidyverse)
+library(here)
+library(patchwork)
+library(beyonce)
+```
+
+### Load Data ###
+```{r}
+bioc <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-15/bioc.csv')
+cran <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-15/cran.csv')
+```
+
+### Bio Data ###
+```{r}
+biodata <- bioc %>%
+  select(rnw) %>% #select variables
+  mutate(rnw) %>% #create new column
+  filter(rnw == "0" | rnw == "1" | rnw == "2" | rnw == "3" | rnw == "4") #filters the rnw
+```
+
+### Bio Plot ###
+```{r}
+ggplot(biodata, aes(x = rnw))+ 
+  geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") + #add a bar graph
+  geom_text(aes( label = scales::percent(..prop..), #add percent to the graph
+                   y= ..prop.. ), stat= "count", vjust = -.5)+
+  labs(y = "Percent", fill="rnw", #Label x and y-axis
+       title = "BIO Vignettes", #creates our title
+       subtitle= "Percent in RNW (Sweave) based vignette count", #creates and label the subtitle
+       caption = "Source: 2022-03-15 TidyTuesday  Data Provided from Vignette Analysis by Robert Flight") + #add source where the data was extracted
+    facet_grid() +
+    scale_y_continuous(labels = scales::percent)
+  
+```
+
+### Cran Data ###
+```{r}
+crandata <- cran %>% #
+  select(rnw) %>% # select variables
+  mutate(rnw) %>% #create new column
+  filter(rnw == "0" | rnw == "1" | rnw == "2" | rnw == "3" | rnw == "4") #filter specific values in rnw
+```
+
+### Cran Plot ###
+```{r}
+ggplot(crandata, aes(x = rnw))+ 
+  geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") + #add a bar graph
+  geom_text(aes( label = scales::percent(..prop..), #add percent to the graph
+                   y= ..prop.. ), stat= "count", vjust = -.5)+
+  labs(y = "Percent", fill="rnw", #Label x and y-axis
+       title = "CRAN Vignettes", #creates our title
+       subtitle= "Percent in RNW (Sweave) based vignette count", #creates and label the subtitle
+       caption = "Source: 2022-03-15 TidyTuesday  Data Provided from Vignette Analysis by Robert Flight") + #add source where the data was extracted
+    facet_grid() +
+    scale_y_continuous(labels = scales::percent)
+```
+
+
+
