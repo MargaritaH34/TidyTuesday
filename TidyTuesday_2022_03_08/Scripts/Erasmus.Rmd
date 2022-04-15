@@ -1,0 +1,49 @@
+---
+title: "Erasmus Student Mobility"
+author: "Margarita Alfaro"
+date: "3/11/2022"
+output:
+   html_document:
+     toc: TRUE
+     toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path = '../output', warning = FALSE, message = FALSE)
+```
+
+### Loas Libraries ###
+```{r}
+library(tidyverse)
+library(here)
+library(ggrepel)
+library(patchwork)
+```
+
+### Load Data ###
+```{r}
+erasmus <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-08/erasmus.csv')
+```
+
+### Code ###
+```{r}
+Edata1 <- erasmus %>% #create the Data
+  select(mobility_start_month, mobility_duration) %>% # select the values need it to create our plot
+  mutate(mobility_start_month, mobility_duration) %>% # mutate the start and the duration
+  filter(mobility_start_month == "2019-01" | mobility_start_month == "2019-02" | mobility_start_month == "2019-03" | mobility_start_month == "2019-04" | mobility_start_month == "2019-05" | mobility_start_month == "2019-06" | mobility_start_month == "2019-07" | mobility_start_month == "2019-08" | mobility_start_month == "2019-09" | mobility_start_month == "2019-10" | mobility_start_month == "2019-11" | mobility_start_month == "2019-12") %>% #select or filter the specific months
+  filter(mobility_duration == "1" | mobility_duration == "2") %>% #filter o select the duration in days for the mobility
+  drop_na()
+```
+
+### Plot ###
+```{r}
+ggplot(Edata1, aes(x = mobility_start_month, y = mobility_duration))+
+  geom_violin()+
+  labs(x = "Mobility Start Month", y = "Duration in Days", #labels our x and y-axis
+       title = "EU Student Mobolity", #creates our title
+       subtitle= "The ERASMUS program: EU programme for education, training, youth and sport", #creates and label the subtitle
+       caption = "Source: 2022-03-08 TidyTuesday  Data Provided by the Data Europe")+
+  theme_bw()+theme(axis.text.x = element_text(angle=90))
+```
+
+
