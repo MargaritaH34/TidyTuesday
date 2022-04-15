@@ -1,0 +1,71 @@
+---
+title: "Baby Names"
+author: "Margarita Alfaro"
+date: "3/29/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Load Libraries ###
+```{r}
+library(here)
+library(tidyverse)
+library(dplyr)
+library(patchwork)
+library(ggrepel)
+```
+
+### Load Data ###
+```{r, warning=FALSE}
+babynames <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-22/babynames.csv')
+```
+
+### Data 1 ###
+```{r, warning=FALSE}
+babydata1 <- babynames %>%
+  select(year, sex) %>% #select variables
+  mutate(year, sex) %>% #create new columns
+  filter(sex == "F") %>% #filter female sex
+  filter(year == "1880" | year == "1900" | year == "1920" | year == "1940" | year == "1960" | year == "1980" | year == "2000" | year == "2020") #filter specific years, every 20 years
+```
+
+### Data 2 ###
+```{r}
+babydata2 <- babynames %>%
+  select(year, sex) %>% #select variables
+  mutate(year, sex) %>% #create nuew colums
+  filter(sex == "M") %>% #filter male sex
+  filter(year == "1880" | year == "1900" | year == "1920" | year == "1940" | year == "1960" | year == "1980" | year == "2000" | year == "2020") #filter specific years, every 20 years
+```
+
+
+### Plot for female and male data ###
+```{r, fig.width=10, warning=FALSE}
+ggplot(babydata1, aes(x= year, y= sex))+
+  geom_freqpoly(data = babydata1, aes(y = ..prop.., fill = factor(..x..)), stat="count", color = 4,
+    lwd = 1,
+    linetype = 1) +
+  geom_freqpoly(data = babydata2, aes(y = ..prop.., fill = factor(..x..)), stat="count", color = 2,
+    lwd = 1,
+    linetype = 1) +
+  
+  geom_text_repel(data = babydata1,aes( label =  scales::percent(..prop..),
+     y= ..prop.. ), stat= "count", vjust = -.5)+
+  
+  geom_text_repel(data = babydata2,aes( label = scales::percent(..prop..),
+     nudge_y=0.05, color = "4",                              
+     y= ..prop.. ), stat= "count", vjust = -.5)+
+  labs(y = "Percent", fill="rnw") +
+  annotate("text",x = 1925, y = .3, label = "Females", color = "red")+
+   annotate("text",x = 1950, y = .3, label = "Males", color = "blue")+
+    facet_grid() +
+    scale_y_continuous(labels = scales::percent)
+
+```
+
+
+
+
