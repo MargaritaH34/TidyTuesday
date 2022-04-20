@@ -1,0 +1,48 @@
+---
+title: "Collegiate Sports Budgets"
+author: "Margarita Alfaro"
+date: "3/30/2022"
+output: html_document
+---
+
+### Load Libraries ###
+```{r}
+library(tidyverse)
+library(here)
+library(dplyr)
+```
+
+### Load Data ###
+```{r}
+sports <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-29/sports.csv')
+```
+
+### Data ###
+```{r}
+sportadata <- sports %>%
+  select(year, institution_name, total_exp_menwomen, sports) %>% # select the values need it to create our plot
+  mutate(year, institution_name, total_exp_menwomen, sports) %>% # mutate the start and the duration
+  filter(institution_name == "California State University-Northridge") %>% #select or filter the specific University
+  filter(sports == "Soccer") #filter soccer sport
+```
+
+
+```{r}
+sportadata %>%
+ggplot(aes(x = year, y = total_exp_menwomen))+
+  geom_polygon(fill="brown")+
+  labs(x = "YEARS", y = "Expenditure in USD", #labels our x and y-axis
+       title = "Collegiate Sports", #creates our title
+       subtitle= "Men and Women's Soccer Expenditures in USD ", #creates and label the subtitle
+       caption = "Source: 2022-03-29 TidyTuesday  Data from the Equity in Athletics Data")+
+  theme_bw()+theme()
+```
+
+
+
+
+
+
+
+
+
