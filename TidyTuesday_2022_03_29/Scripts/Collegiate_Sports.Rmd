@@ -40,9 +40,3 @@ ggplot(aes(x = year, y = total_exp_menwomen))+
 
 
 
-
-
-
-
-
-
