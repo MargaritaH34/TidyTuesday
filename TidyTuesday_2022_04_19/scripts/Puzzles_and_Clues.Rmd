@@ -1,0 +1,47 @@
+---
+title: "Crossword Puzzles and Clues"
+author: "Margarita Alfaro"
+date: "4/21/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Load Libraries ###
+```{r}
+library(tidyverse)
+library(here)
+library(plotrix)
+```
+
+### Load Data ###
+```{r}
+big_dave <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-04-19/big_dave.csv')
+times <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-04-19/times.csv')
+```
+
+```{r}
+puzzle <- big_dave %>% #cleaning data
+  filter(definition == "animals" | definition == "plants" | definition == "drinks" | definition == "food") %>% # filters the definition for specific items
+  drop_na() #drop NAs
+```
+
+```{r}
+x <- c(18, 24, 22, 82) 
+label <- c("Animals\n 18", # \n grab the radial positions of the labels it also gives names
+            "Plants\n 24",
+            "Drinks\n 22",
+            "Food\n 82") 
+```
+
+# Plotting a 3D Pie
+```{r, fig.width= 6, fig.}
+pie3D(x, labels = label, #plot the 3d pie and add label to it
+      explode = 0.1,#separate the pie into pieces
+      main = "Words associated with puzzle's clues",#give name to the pie
+      col=c("deepskyblue2", "goldenrod1", "pink1", "darkolivegreen3"),  #add colors to the pie
+      labelpos=NULL)
+```
+
