@@ -1,0 +1,48 @@
+---
+title: "US Gigawatts Capacity"
+author: "Margarita Alfaro"
+date: "4/29/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE,}
+knitr::opts_chunk$set(echo = TRUE, fig.path = '../output', warning = FALSE, message = FALSE)
+```
+
+### Load Libraries ###
+```{r}
+library(tidyverse)
+library(here)
+library(gganimate)
+```
+
+```{r}
+capacity <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-05-03/capacity.csv')
+```
+
+```{r}
+capacity1 <- capacity %>%
+  select(type, year, total_gw) %>% # select the values need it to create our plot
+  mutate(type, year, total_gw) %>% # select the values need it to create our plot
+  drop_na() #drops NAs
+```
+  
+```{r}
+capacity1 %>%
+  ggplot(aes(x= type, y= total_gw))+ #creates our graph
+  geom_point()+
+   labs(x= "Types of Power", y= "Total of Gigawatts", #labels our x and y-axis
+       title = "Utilities", #creates our title
+       subtitle= "US Total of Gigawatts Capacity in Different type of Power from 2014-2020 ", #creates and label the subtitle
+       caption = "Source: 2022-05-03 TidyTuesday  Data from the Berkeley Lab")+
+transition_states(
+     year, # what are we animating by
+     transition_length = 2, #The relative length of the transition.
+     state_length = 1 # The length of the pause between transitions
+   )+
+  ease_aes("sine-in-out") +
+  ggtitle('Year: {closest_state}')+ #add a moving year title
+  theme(axis.text.x = element_text(angle=90)) #change position of the X-axis to 90 degrees
+```
+
+
